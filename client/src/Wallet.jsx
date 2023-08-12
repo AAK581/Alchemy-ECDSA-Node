@@ -26,14 +26,16 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
     }
   }
   return (
+    
     <div className="container wallet">
       <h1>Your Private Key</h1>
       <div>Wallet Address: {address}</div>
       <div className="errormsg">{invalidPK || null}</div>
       <label>
-        Private Key
-        <input placeholder="" value={privateKey} onBlur={onChange} onChange={onChange}></input>
+        Wallet Address
+        <input placeholder="Type an address, for example: 0x1" value={address} onChange={onChange}></input>
       </label>
+
       <div className="balance">Balance: {balance}</div>
     </div>
   );

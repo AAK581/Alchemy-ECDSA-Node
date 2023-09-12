@@ -3,6 +3,8 @@ const app = express();
 const cors = require("cors");
 const port = 3042;
 const {secp256k1} = require('./node_modules/ethereum-cryptography/secp256k1');
+//import App from "../client/src/App";
+
 //const toHash = require('../Functions/toHash');
 //import {wallet} from '../client/src/Wallet';
 

@@ -4,8 +4,10 @@ import {keccak256} from "ethereum-cryptography/keccak.js"
 import {bytesToHex as toHex} from "ethereum-cryptography/utils"
 import toHash from "./Functions/toHash";
 import daWallet from "./Functions/daWallet";
+import { useState } from "react";
 
 function Wallet({ address, setAddress, balance, setBalance, privateKey, setPrivateKey}) {
+  
   async function onChange(evt) {
     const privateKey = evt.target.value;
     setPrivateKey(privateKey);
@@ -13,7 +15,7 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
     const address = toHex(keccak256(publicKey.slice(1)).slice(-20));
     setAddress(address);
     const message = "Take that";
-    const msgHash = toHash(message);
+    //const msgHash = toHash(message);
     //const signature = secp256k1.sign(msgHash, privateKey, 1);
     
     if (address) {
@@ -26,7 +28,6 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
     }
   }
   return (
-    
     <div className="container wallet">
       <h1>Your Wallet</h1>
 

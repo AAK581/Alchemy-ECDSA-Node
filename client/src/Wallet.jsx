@@ -2,9 +2,7 @@ import server from "./server";
 import {secp256k1} from "ethereum-cryptography/secp256k1"
 import {keccak256} from "ethereum-cryptography/keccak.js"
 import {bytesToHex as toHex} from "ethereum-cryptography/utils"
-import toHash from "./Functions/toHash";
-import daWallet from "./Functions/daWallet";
-import { useState } from "react";
+
 
 function Wallet({ address, setAddress, balance, setBalance, privateKey, setPrivateKey}) {
   
@@ -30,13 +28,11 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
   return (
     <div className="container wallet">
       <h1>Your Private Key</h1>
-      <div>Wallet Address: {address}</div>
-      <div className="errormsg">{invalidPK || null}</div>
-      <label>
-        Wallet Address
-        <input placeholder="Type an address, for example: 0x1" value={address} onChange={onChange}></input>
-      </label>
-
+      <input placeholder="Enter Private Key" value={privateKey} onChange={onChange}></input>
+      <br />
+      <div className="balance">Wallet Address: {address}</div>
+      {/* <div className="errormsg">{invalidPK || null}</div> */}
+      <br />
       <div className="balance">Balance: {balance}</div>
     </div>
   );

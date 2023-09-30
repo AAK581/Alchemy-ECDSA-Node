@@ -4,16 +4,16 @@ import App from "./App";
 import { secp256k1 } from "ethereum-cryptography/secp256k1";
 import { keccak256 } from "ethereum-cryptography/keccak";
 import { utf8ToBytes, toHex } from "ethereum-cryptography/utils";
-import { signMsg } from "./Functions/functions";
 
 function Transfer({ address, setBalance, privateKey, setPrivateKey }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
+  const [isVerified, setIsVerified] = useState("");
   //const [signature, setSignature] = useState("");
   //const msg = "Take that";
   
   
-  server.post(`send`, signature = signature);
+  server.post(`send`);
 
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
@@ -22,9 +22,10 @@ function Transfer({ address, setBalance, privateKey, setPrivateKey }) {
   
     try {
       //hash message
-      const msg = toHex(keccak256(utf8ToBytes("Take that")));
+      const msg = "Take that";
+      const msgHash = toHex(keccak256(utf8ToBytes(msg)));
       //sign it
-      let signature = signMsg(msg, privateKey);
+      let signature = secp256k1.sign(msgHash, privateKey);
       console.log(`Signature: ${signature}`);
       //turn signature to JSON so we can upload it to the server
       signature = JSON.stringify({
@@ -33,16 +34,23 @@ function Transfer({ address, setBalance, privateKey, setPrivateKey }) {
         s: signature.s.toString(),
       })
       console.log(`Signature JSON : ${signature}`);
+      //send signature, sender address, and amount of money
       const {
-        data: { balance },
+        data: { balance, isVerified },
       } = await server.post(`send`, {
         sender: address,
         amount: parseInt(sendAmount),
         recipient,
-
+        signature: signature,
+        msg: msg,
+        msgHash: msgHash
       });
       setBalance(balance);
+      setIsVerified(isVerified);
+      console.log(`isVerified: ${isVerified}`);
     } catch (ex) {
+      isVerified = false;
+      setIsVerified(false);
       alert(ex.response.data.message);
     }
   }

@@ -7,6 +7,7 @@ import {bytesToHex as toHex} from "ethereum-cryptography/utils"
 function Wallet({ address, setAddress, balance, setBalance, privateKey, setPrivateKey}) {
   
   async function onChange(evt) {
+    try {
     const privateKey = evt.target.value;
     setPrivateKey(privateKey);
     const publicKey = secp256k1.getPublicKey(privateKey, false);
@@ -25,6 +26,11 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
       setBalance(0);
     }
   }
+    catch(ex) {
+      alert(ex.response.data.message);
+    }
+  }
+
   return (
     <div className="container wallet">
       <h1>Your Private Key</h1>
@@ -36,6 +42,5 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
       <div className="balance">Balance: {balance}</div>
     </div>
   );
-}
-
+  }
 export default Wallet;

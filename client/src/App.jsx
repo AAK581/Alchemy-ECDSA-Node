@@ -7,6 +7,7 @@ function App() {
   const [balance, setBalance] = useState(0);
   const [address, setAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
 
   return (
     <div className="app">
@@ -20,7 +21,8 @@ function App() {
       />
       <Transfer setBalance={setBalance} address={address} 
         privateKey = {privateKey}
-        setPrivateKey = {setPrivateKey}/>
+        isVerified={isVerified}
+        setIsVerified={setIsVerified}/>
     </div>
   );
 }

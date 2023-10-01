@@ -37,10 +37,18 @@ app.post("/send", (req, res) => {
   console.log(`Signature : ${signature}`);
   console.log(`msgHash : ${msgHash}`);
   //turn signature back from json
-  let recoveredSignature = JSON.parse(signature);
+  const recoveredSignature = JSON.parse(signature);
+  console.log("Type of signature : ", typeof(signature));
+  console.log("Type of msgHash : ", typeof(msgHash));
+  console.log("Type of sender : ", typeof(sender));
+  
   recoveredSignature.r = BigInt(recoveredSignature.r);
   recoveredSignature.s = BigInt(recoveredSignature.s);
-  console.log(`Recovered Signal : ${recoveredSignature}`);
+  recoveredSignature.revocery = parseInt(recoveredSignature.recovery);
+  console.log(`msgHash : ${msgHash}`);
+  console.log(`Recovered Signature.recovery : ${recoveredSignature.recovery}`);
+  console.log(`Recovered Signature : ${recoveredSignature}`);
+  console.log(`isVerified: ${isVerified}`);
 
   //Check if the transaction is valid or not
   isVerified = secp256k1.verify(recoveredSignature, msgHash, sender);
@@ -54,17 +62,19 @@ app.post("/send", (req, res) => {
     .send({message : "Invalid transaction"}); //a JSON message to send to the client
     return;
   }
+  else
+  {
+      setInitialBalance(sender);
+      setInitialBalance(recipient);
 
-  setInitialBalance(sender);
-  setInitialBalance(recipient);
-
-  if (balances[sender] < amount) {
-    res.status(400).send({ message: "Not enough funds!" }); //another response object, but inline (?)
-  } else {
-    balances[sender] -= amount;
-    balances[recipient] += amount;
-    res.send({ balance: balances[sender] });
-  }
+      if (balances[sender] < amount) {
+        res.status(400).send({ message: "Not enough funds!" }); //another response object, but inline (?)
+      } else {
+        balances[sender] -= amount;
+        balances[recipient] += amount;
+        res.send({ balance: balances[sender] });
+      }
+}
 });
 
 app.listen(port, () => {
@@ -73,6 +83,6 @@ app.listen(port, () => {
 
 function setInitialBalance(address) {
   if (!balances[address]) {
-    balances[address] = 50;
+    balances[address] = 0;
   }
 }

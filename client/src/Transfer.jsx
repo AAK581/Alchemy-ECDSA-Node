@@ -1,19 +1,18 @@
 import { useState } from "react";
 import server from "./server";
-import App from "./App";
 import { secp256k1 } from "ethereum-cryptography/secp256k1";
 import { keccak256 } from "ethereum-cryptography/keccak";
 import { utf8ToBytes, toHex } from "ethereum-cryptography/utils";
 
-function Transfer({ address, setBalance, privateKey, setPrivateKey }) {
+function Transfer({ address, setBalance, privateKey, isVerified, setIsVerified }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
-  const [isVerified, setIsVerified] = useState("");
+  //let [isVerified, setIsVerified] = useState("");
   //const [signature, setSignature] = useState("");
   //const msg = "Take that";
   
   
-  server.post(`send`);
+  //server.post(`send`);
 
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
@@ -26,14 +25,18 @@ function Transfer({ address, setBalance, privateKey, setPrivateKey }) {
       const msgHash = toHex(keccak256(utf8ToBytes(msg)));
       //sign it
       let signature = secp256k1.sign(msgHash, privateKey);
-      console.log(`Signature: ${signature}`);
+      console.log(`Signature in Transfer.jsx: ${signature}`);
+      console.log(`msgHash in Transfer.jsx: ${msgHash}`);
+      console.log(`Type of msgHash in Transfer.jsx: ${typeof(msgHash)}`);
       //turn signature to JSON so we can upload it to the server
       signature = JSON.stringify({
         ...signature,
         r: signature.r.toString(),
         s: signature.s.toString(),
+        recovery: 1
       })
       console.log(`Signature JSON : ${signature}`);
+      console.log(`Sender : ${address}`);
       //send signature, sender address, and amount of money
       const {
         data: { balance, isVerified },
@@ -50,8 +53,8 @@ function Transfer({ address, setBalance, privateKey, setPrivateKey }) {
       console.log(`isVerified: ${isVerified}`);
     } catch (ex) {
       isVerified = false;
-      setIsVerified(false);
-      alert(ex.response.data.message);
+      setIsVerified(isVerified);
+      alert(ex);
     }
   }
 

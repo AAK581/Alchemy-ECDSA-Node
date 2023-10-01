@@ -44,14 +44,15 @@ app.post("/send", (req, res) => {
   
   recoveredSignature.r = BigInt(recoveredSignature.r);
   recoveredSignature.s = BigInt(recoveredSignature.s);
-  recoveredSignature.revocery = parseInt(recoveredSignature.recovery);
+  recoveredSignature.recovery = parseInt(recoveredSignature.recovery);
+  const signature2 = new secp256k1.Signature(recoveredSignature.r, recoveredSignature.s, recoveredSignature.recovery);
   console.log(`msgHash : ${msgHash}`);
   console.log(`Recovered Signature.recovery : ${recoveredSignature.recovery}`);
   console.log(`Recovered Signature : ${recoveredSignature}`);
   console.log(`isVerified: ${isVerified}`);
 
   //Check if the transaction is valid or not
-  isVerified = secp256k1.verify(recoveredSignature, msgHash, sender);
+  isVerified = secp256k1.verify(signature2, `0x${msgHash}`, sender);
   console.log(`isVerified: ${isVerified}`);
 
   //If it's invalid, ohhhh boy

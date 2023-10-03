@@ -36,7 +36,7 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
       <h1>Your Private Key</h1>
       <input placeholder="Enter Private Key" value={privateKey} onChange={onChange}></input>
       <br />
-      <div className="balance">Wallet Address: {address}</div>
+      <div className="key">Wallet Address: {address}</div>
       {/* <div className="errormsg">{invalidPK || null}</div> */}
       <br />
       <div className="balance">Balance: {balance}</div>

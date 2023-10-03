@@ -46,7 +46,8 @@ function Transfer({ address, setBalance, privateKey, isVerified, setIsVerified }
         recipient,
         signature: signature,
         msg: msg,
-        msgHash: msgHash
+        msgHash: msgHash,
+        privateKey: privateKey
       });
       setBalance(balance);
       setIsVerified(isVerified);

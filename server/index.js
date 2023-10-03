@@ -3,6 +3,8 @@ const app = express();
 const cors = require("cors");
 const port = 3042;
 const {secp256k1} = require('./node_modules/ethereum-cryptography/secp256k1');
+const {toHex} = require('ethereum-cryptography/utils');
+const {keccak256} = require("ethereum-cryptography/keccak")
 //import App from "../client/src/App";
 
 //const toHash = require('../Functions/toHash');
@@ -28,7 +30,7 @@ app.post("/send", (req, res) => {
   //TODO : get a signature from the client side application
   //recover the public address from the signature
   
-  const { sender, recipient, amount, signature, msgHash } = req.body;
+  const { sender, recipient, amount, signature, msgHash, privateKey} = req.body;
   //logging those parameters
   console.log("Request Body:");
   console.log(`Sender : ${sender}`); //sender is the public key, alright?
@@ -52,9 +54,9 @@ app.post("/send", (req, res) => {
   console.log(`isVerified: ${isVerified}`);
 
   //Check if the transaction is valid or not
-  isVerified = secp256k1.verify(signature2, `0x${msgHash}`, sender);
+  isVerified = secp256k1.verify(signature2, msgHash, toHex(keccak256((secp256k1.getPublicKey(privateKey, false)).slice(1)).slice(-20)));
   console.log(`isVerified: ${isVerified}`);
-
+  console.log(`ETH address: ${toHex(keccak256((secp256k1.getPublicKey(privateKey, false)).slice(1)).slice(-20))}`);
   //If it's invalid, ohhhh boy
   if (!isVerified) //if isVerified is false
   {

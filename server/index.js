@@ -54,7 +54,7 @@ app.post("/send", (req, res) => {
   console.log(`isVerified: ${isVerified}`);
 
   //Check if the transaction is valid or not
-  isVerified = secp256k1.verify(signature2, msgHash, toHex(keccak256((secp256k1.getPublicKey(privateKey, false)).slice(1)).slice(-20)));
+  isVerified = secp256k1.verify(signature2, msgHash, secp256k1.getPublicKey(privateKey, false));
   console.log(`isVerified: ${isVerified}`);
   console.log(`ETH address: ${toHex(keccak256((secp256k1.getPublicKey(privateKey, false)).slice(1)).slice(-20))}`);
   //If it's invalid, ohhhh boy
